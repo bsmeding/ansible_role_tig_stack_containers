@@ -1,0 +1,7 @@
+---
+# tasks file for tigstack
+
+
+# install
+- name: Include tasks for Grafana
+  include_tasks: install_grafana.yml
