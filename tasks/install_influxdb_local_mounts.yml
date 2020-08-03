@@ -1,0 +1,143 @@
+
+#install
+- name: Check if influxdb group exist
+  group:
+    name: influxdb
+    gid: 991
+    system: true
+  become: true
+
+- name: Check if influxdb user exist
+  user:
+    name: influxdb
+    uid: 991
+    shell: /sbin/nologin
+    groups: influxdb
+    system: true
+    append: yes
+  become: true
+
+- name: Check influx config directory
+  file:
+    path: /etc/influxdb
+    state: directory
+    mode: '0744'
+    owner: influxdb
+    group: influxdb
+  become: true
+
+- name: Check if config file exist
+  stat:
+    path: /etc/influxdb/influxdb.conf
+  register: influxdb_config_file
+
+- name: Create config file
+  shell: 'docker run --rm influxdb influxd config | sudo tee /etc/influxdb/influxdb.conf > /dev/null'
+  when: influxdb_config_file.stat.exists == false
+
+
+## Set config file:
+# - name: Modify InfluxDB hostname
+#   replace:
+#     dest=/etc/opt/influxdb/influxdb.conf
+#     regexp='hostname = "localhost"'
+#     replace='hostname = "{{ ansible_hostname }}"'
+#     backup=yes
+
+- name: Set influx config directory permissions
+  file:
+    path: /etc/influxdb
+    state: directory
+    mode: 'u=rwX,g=r,o=r'
+    owner: influxdb
+    group: influxdb
+    recurse: true
+  become: true
+  when: influxdb_config_file.stat.exists == false
+
+- name: Check influx lib directory
+  file:
+    path: /var/lib/influxdb
+    state: directory
+    mode: 'u=rwX,g=rX,o=rX'
+    owner: influxdb
+    group: influxdb
+  become: true
+
+- find:
+    paths: /var/lib/influxdb
+    file_type: directory
+    patterns: "*.*"
+  register: influxdbdir_files
+
+- name: Check influx script directory if lib is empty or force recreate
+  file:
+    path: /etc/influxdb/scripts
+    state: directory
+    mode: 'u=rwX,g=rX,o=rX'
+    owner: influxdb
+    group: influxdb
+  become: true
+  when: influxdbdir_files.matched|int == 0
+
+- name: Copy SQL init script
+  template:
+    src: influxdb/influxdb-init.iql.j2
+    dest: /etc/influxdb/scripts/influxdb-init.iql
+    mode: 'u=rwX,g=rX,o=rX'
+    owner: influxdb
+    group: influxdb
+  register: influxdb_init_script
+
+- name: Set database retention
+  shell: 'docker run --rm -e INFLUXDB_HTTP_AUTH_ENABLED=true \
+         -e INFLUXDB_ADMIN_USER={{ influx_admin_user }} \
+         -e INFLUXDB_ADMIN_PASSWORD={{ influx_admin_password }} \
+         -v /var/lib/influxdb:/var/lib/influxdb \
+         -v /etc/influxdb/scripts:/docker-entrypoint-initdb.d \
+         influxdb /init-influxdb.sh > /dev/null'
+  when: influxdb_init_script.changed
+
+- name: Set influx data directory permissions
+  file:
+    path: /var/lib/influxdb/data
+    state: directory
+    mode: 'u=rwX,g=rw,o=r'
+    owner: influxdb
+    group: influxdb
+    recurse: true
+  become: true
+
+- name: Set influx meta directory permissions
+  file:
+    path: /var/lib/influxdb/meta
+    state: directory
+    mode: 'u=rwX,g=wr,o=r'
+    owner: influxdb
+    group: influxdb
+    recurse: true
+  become: true
+
+
+- name: Run InfluxDB container
+  docker_container:
+    name: influxdb
+    image: "{{ docker_containers.influxdb.image }}"
+    user: 991:991
+    state: started
+    restart: yes
+    restart_policy: on-failure
+    restart_retries: 4
+    privileged: false
+    purge_networks: no
+    ports:
+        - 8086:8086
+#        - 8083:8083
+    volumes:
+      - /etc/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
+      - /var/lib/influxdb:/var/lib/influxdb
+    env:
+        INFLUXDB_HTTP_AUTH_ENABLED: "false"
+        INFLUXDB_DB: "{{ influx_database_name }}"
+        INFLUXDB_ADMIN_USER: "{{ influx_admin_user }}"
+        INFLUXDB_ADMIN_PASSWORD: "{{ influx_admin_password }}"

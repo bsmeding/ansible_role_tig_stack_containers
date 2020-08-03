@@ -1,12 +1,12 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+Ansible role to install TIG stack, Telegraf, InfluxDB and Grafana in docker containers
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Docker installed on target machine see Dependencies
 
 Role Variables
 --------------
@@ -16,16 +16,44 @@ A description of the settable variables for this role should go here, including 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+ansible-galaxy install geerlingguy.docker geerlingguy.pip
+
+'''
+---
+- hosts: [tig_stack]
+  vars:
+    pip_package: python3-pip
+    pip_install_packages:
+      - name: docker
+    docker_users:
+      - <YOUR USERNAME>
+  roles:
+  roles:
+    - name: geerlingguy.pip
+    - name: geerlingguy.docker
+      become: true
+'''
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Install TIG stack role: ansible-galaxy install bsmeding.tig_stack_docker
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+---
+- name: Install TIG stack
+  hosts: [tig_combined]
+  gather_facts: true
+  become: yes
+  vars:
+    show_debug: true
+    tig_distributed: false
+  environment:
+    PYTHONPATH: "/home/bsmeding/.local/lib/python3.7/site-packages/"
+  tasks:
+    - name: Include role for TIG stack
+      include_role:
+        name: tig_stack_docker
+
 
 License
 -------

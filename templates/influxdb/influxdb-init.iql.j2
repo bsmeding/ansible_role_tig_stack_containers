@@ -1,0 +1,2 @@
+CREATE DATABASE {{ influx_database_name }};
+CREATE RETENTION POLICY {{ influx_database_retention_policy.name }} ON {{ influx_database_name }} DURATION {{ influx_database_retention_policy.time }} REPLICATION 1 DEFAULT;

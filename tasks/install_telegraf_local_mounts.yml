@@ -1,0 +1,57 @@
+
+#install
+- name: Check if telegraf group exist
+  group:
+    name: telegraf
+    gid: 993
+    system: true
+  become: true
+
+- name: Check if telegraf user exist
+  user:
+    name: telegraf
+    uid: 993
+    shell: /sbin/nologin
+    groups: telegraf
+    system: true
+    append: yes
+  become: true
+
+
+
+- name: Check if config file exist
+  stat:
+    path: /etc/telegraf/telegraf.conf
+  register: telegraf_config_file
+
+- name: Create config file
+  shell: 'docker run --rm telegraf telegraf config | sudo tee /etc/telegraf/telegraf.conf &lt; /dev/null'
+  when: telegraf_config_file.stat.exists == false
+
+- name: Check telegraf config directory
+  file:
+    path: /etc/telegraf/telegraf.conf
+    mode: '0744'
+    owner: telegraf
+    group: telegraf
+  become: true
+
+- name: Run Telegraf container
+  docker_container:
+    name: telegraf
+    image: "{{ docker_containers.telegraf.image }}"
+    user: 993:993
+    state: started
+    restart: yes
+    restart_policy: on-failure
+    restart_retries: 4
+    links:
+      - influxdb:influxdb
+    privileged: true
+    purge_networks: no
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - /etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    env:
+      HOST_PROC=/host/proc

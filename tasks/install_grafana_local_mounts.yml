@@ -1,0 +1,94 @@
+
+#install
+- name: Check if grafana group exist
+  group:
+    name: grafana
+    gid: 992
+    system: false
+  become: true
+
+- name: Check if grafana user exist
+  user:
+    name: grafana
+    uid: 992
+    shell: /sbin/nologin
+    groups: grafana
+    system: false
+    append: yes
+  become: true
+
+- name: Check influx config directory
+  file:
+    path: /etc/grafana
+    state: directory
+    mode: '0744'
+    owner: grafana
+    group: grafana
+  become: true
+
+- name: Check if config file exist
+  stat:
+    path: /etc/grafana/grafana.ini
+  register: grafana_config_file
+
+# - name: Create config file
+#   shell: 'docker run --rm grafana  | sudo tee /etc/grafana/grafana.ini > /dev/null'
+#   when: grafana_config_file.stat.exists == false
+
+
+## Set config file:
+# - name: Modify grafana hostname
+#   replace:
+#     dest=/etc/opt/grafana/grafana.conf
+#     regexp='hostname = "localhost"'
+#     replace='hostname = "{{ ansible_hostname }}"'
+#     backup=yes
+
+- name: Set grafana config directory permissions
+  file:
+    path: /etc/grafana
+    state: directory
+    mode: 'u=rwX,g=r,o=r'
+    owner: grafana
+    group: grafana
+    recurse: true
+  become: true
+  when: grafana_config_file.stat.exists == false
+
+- name: Check grafana lib directory
+  file:
+    path: /var/lib/grafana
+    state: directory
+    mode: 'u=rwX,g=rX,o=rX'
+    owner: grafana
+    group: grafana
+  become: true
+
+- name: Install Grafana
+  docker_container:
+    name: grafana
+    image: "{{ docker_containers.grafana.image }}"
+    user: 992:992
+    state: started
+    restart: yes
+    restart_policy: on-failure
+    restart_retries: 4
+    links:
+      - influxdb:influxdb
+    privileged: false
+    purge_networks: no
+    ports:
+      - '3000:3000'
+    volumes:
+      - /var/lib/grafana:/var/lib/grafana
+    env:
+      GF_SECURITY_ADMIN_USER: "{{ grafana_admin_user }}"
+      GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password }}"
+      GF_SECURITY_SECRET_KEY: "{{ grafana_secret_key }}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_USERS_ALLOW_ORG_CREATE: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_AUTH_ANONYMOUS_ORG_NAME: "grafana"
+      GF_DASHBOARDS_JSON_ENABLED: "true"
+      GF_DASHBOARDS_JSON_PATH: "/opt/grafana"
+      GRAFANA_PLUGINS_ENABLED: "false"

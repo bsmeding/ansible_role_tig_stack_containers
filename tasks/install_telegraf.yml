@@ -1,0 +1,35 @@
+
+#install
+- name: Install Telegraf data container
+  docker_volume:
+    name: telegraf_data
+
+- name: Set influx config directory permissions
+  file:
+    path: /etc/telegraf
+    state: directory
+    mode: 'u=rwX,g=rw,o=r'
+    recurse: true
+  become: true
+
+
+- name: Install Telegraf
+  docker_container:
+    name: telegraf
+    image: "{{ docker_containers.telegraf.image }}"
+    state: started
+    restart: yes
+    restart_policy: on-failure
+    restart_retries: 4
+    links:
+      - influxdb:influxdb
+    privileged: true
+    purge_networks: no
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - telegraf_data:/etc/telegraf
+    env:
+      HOST_NAME: "telegraf"
+      INFLUXDB_HOST: "influxdb"
+      INFLUXDB_PORT: "8086"
+      DATABASE: "telegraf"

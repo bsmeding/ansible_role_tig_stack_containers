@@ -1,2 +1,25 @@
 ---
 # defaults file for tigstack
+
+path_docker_build_dockerfiles: '/tmp/tig_stack_docker_files'
+use_local_mounts_instead_of_docker_volume: true
+
+influx_database_name: 'telegraf'
+influx_database_retention_policy:
+  name: 'one_week'
+  time: '168h'          # 168 hour = one week
+influx_admin_user: influxadmin
+influx_admin_password: influxpassword
+
+grafana_admin_user: admin
+grafana_admin_password: admin
+grafana_secret_key: grafana
+
+
+docker_containers:
+  grafana:
+    image: grafana/grafana:6.6.1
+  influxdb:
+    image: influxdb:1.8.1
+  telegraf:
+    image: telegraf:1.15.1
