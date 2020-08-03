@@ -13,6 +13,7 @@ Role Variables
 
 A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
+
 Dependencies
 ------------
 
@@ -33,6 +34,8 @@ ansible-galaxy install geerlingguy.docker geerlingguy.pip
     - name: geerlingguy.docker
       become: true
 '''
+EDIT the: <YOUR USERNAME> with your ownd account logging in to the tig-stack server
+
 
 Example Playbook
 ----------------
@@ -48,11 +51,13 @@ Install TIG stack role: ansible-galaxy install bsmeding.tig_stack_docker
     show_debug: true
     tig_distributed: false
   environment:
-    PYTHONPATH: "/home/bsmeding/.local/lib/python3.7/site-packages/"
+    PYTHONPATH: "/home/<YOUR USERNAME>/.local/lib/python3.7/site-packages/"
   tasks:
     - name: Include role for TIG stack
       include_role:
         name: tig_stack_docker
+
+EDIT the: <YOUR USERNAME> with your ownd account logging in to the tig-stack server
 
 
 License
@@ -63,4 +68,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Created by Bart Smeding bartsmeding@yaworks.com / mail@bartsmeding.nl / https://github.com/bsmeding
