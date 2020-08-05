@@ -14,6 +14,15 @@ Role Variables
 A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
 
+PLEASE NOTE: there are use settings as login names and password, please use host_vars or group_vars for override and encrypt these variable files with ansible-vault
+
+
+MIBs
+----
+With Telegraf there are several SNMP mibs shipped (see Docker used default: )
+If you need extra / custom mibs place theme on /etc/telegraf/mibs on the target host running the Telegraf container (only working with local_mounts version)
+
+
 Dependencies
 ------------
 
@@ -26,6 +35,7 @@ ansible-galaxy install geerlingguy.docker geerlingguy.pip
     pip_package: python3-pip
     pip_install_packages:
       - name: docker
+      - name: influxdb
     docker_users:
       - <YOUR USERNAME>
   roles:
