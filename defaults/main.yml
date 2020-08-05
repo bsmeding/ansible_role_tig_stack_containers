@@ -5,6 +5,7 @@ path_docker_build_dockerfiles: '/tmp/tig_stack_docker_files'
 use_local_mounts_instead_of_docker_volume: true
 
 influx_database_name: 'telegraf'
+influx_reinitialize_database: false     # when true, database script will be run
 influx_database_retention_policy:
   name: 'one_week'
   time: '168h'          # 168 hour = one week

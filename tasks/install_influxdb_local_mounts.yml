@@ -89,37 +89,25 @@
     owner: influxdb
     group: influxdb
   register: influxdb_init_script
-  notify: Set database retention
 
-# - name: Set database retention
-#   shell: 'docker run --rm -e INFLUXDB_HTTP_AUTH_ENABLED=true \
-#          -e INFLUXDB_ADMIN_USER={{ influx_admin_user }} \
-#          -e INFLUXDB_ADMIN_PASSWORD={{ influx_admin_password }} \
-#          -v /var/lib/influxdb:/var/lib/influxdb \
-#          -v /etc/influxdb/scripts:/docker-entrypoint-initdb.d \
-#          influxdb /init-influxdb.sh > /dev/null'
-#   when: influxdb_init_script.changed
+- name: Set database retention
+  shell: 'docker run --rm -e INFLUXDB_HTTP_AUTH_ENABLED=true \
+         -e INFLUXDB_ADMIN_USER={{ influx_admin_user }} \
+         -e INFLUXDB_ADMIN_PASSWORD={{ influx_admin_password }} \
+         -v /var/lib/influxdb:/var/lib/influxdb \
+         -v /etc/influxdb/scripts:/docker-entrypoint-initdb.d \
+         influxdb /init-influxdb.sh > /dev/null'
+  when: influxdb_init_script.changed or influx_reinitialize_database|bool
 
 - name: Set influx data directory permissions
   file:
-    path: /var/lib/influxdb/data
+    path: /var/lib/influxdb
     state: directory
     mode: 'u=rwX,g=rw,o=r'
     owner: influxdb
     group: influxdb
     recurse: true
   become: true
-
-- name: Set influx meta directory permissions
-  file:
-    path: /var/lib/influxdb/meta
-    state: directory
-    mode: 'u=rwX,g=wr,o=r'
-    owner: influxdb
-    group: influxdb
-    recurse: true
-  become: true
-
 
 - name: Run InfluxDB container
   docker_container:
@@ -129,7 +117,7 @@
     state: started
     restart: yes
     restart_policy: "{{ docker_restart_policy }}"
-    privileged: true
+    privileged: false
     purge_networks: no
     published_ports:
         - 8086:8086
@@ -154,6 +142,7 @@
     grants:
       - database: "{{ influx_database_name }}"
         privilege: 'WRITE'
+  ignore_errors: true
 
 - name: Create influx user for Grafana
   influxdb_user:
@@ -166,3 +155,4 @@
     grants:
       - database: "{{ influx_database_name }}"
         privilege: 'READ'
+  ignore_errors: true
