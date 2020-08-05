@@ -1,9 +1,2 @@
 ---
 # handlers file for tigstack
-- name: Set database retention
-  shell: 'docker run --rm -e INFLUXDB_HTTP_AUTH_ENABLED=true \
-         -e INFLUXDB_ADMIN_USER={{ influx_admin_user }} \
-         -e INFLUXDB_ADMIN_PASSWORD={{ influx_admin_password }} \
-         -v /var/lib/influxdb:/var/lib/influxdb \
-         -v /etc/influxdb/scripts:/docker-entrypoint-initdb.d \
-         influxdb /init-influxdb.sh > /dev/null'
