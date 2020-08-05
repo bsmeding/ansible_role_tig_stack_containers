@@ -26,6 +26,15 @@
     group: telegraf
   become: true
 
+- name: Check telegraf MIBs directory
+  file:
+    path: /etc/telegraf/mibs/
+    state: directory
+    mode: '0744'
+    owner: telegraf
+    group: telegraf
+  become: true
+
 - name: Check if config file exist
   stat:
     path: /etc/telegraf/telegraf.conf
@@ -62,6 +71,7 @@
       - /proc:/host/proc:ro
       - /etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - /etc/telegraf/telegraf.d:/etc/telegraf/telegraf.d
+      - /etc/telegraf/mibs:/usr/share/mibs/netsnmp      # search paths for SNMP MIBS (/usr/share/mibs and /iana / ietf already in use):  //.snmp/mibs:/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf:/usr/share/mibs/site:/usr/share/snmp/mibs:/usr/share/mibs/iana:/usr/share/mibs/ietf:/usr/share/mibs/netsnmp
     env:
       HOST_PROC=/host/proc
     command:
