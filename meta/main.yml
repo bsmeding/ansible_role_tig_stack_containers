@@ -16,9 +16,9 @@ galaxy_info:
         - xenial
   galaxy_tags:
     - system
-    - Telegraf
-    - InfluxDB
-    - Grafana
+    - telegraf
+    - influxdb
+    - grafana
     - monitoring
-    - snmp-monitoring
+    - snmp
 dependencies: []
