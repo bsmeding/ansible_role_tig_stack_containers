@@ -26,6 +26,23 @@
     group: telegraf
   become: true
 
+- name: Check telegraf to influx output config
+  template:
+    src: telegraf/telegraf_output_influxdb.j2
+    dest: /etc/telegraf/telegraf.d/output_influxdb.conf
+    mode: 'u=rwX,g=rX,o=rX'
+    owner: telegraf
+    group: telegraf
+
+- name: Check telegraf snmp_trap inputs config
+  template:
+    src: telegraf/telegraf_input_snmp_trap.j2
+    dest: /etc/telegraf/telegraf.d/input_snmp_trap.conf
+    mode: 'u=rwX,g=rX,o=rX'
+    owner: telegraf
+    group: telegraf
+
+
 - name: Check telegraf MIBs directory
   file:
     path: /etc/telegraf/mibs/
@@ -65,7 +82,7 @@
     privileged: false
     purge_networks: no
     published_ports:
-      - '162:1062/udp'
+      - '{{ telegraf_snmp_trap_port }}:1062/udp'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc:/host/proc:ro

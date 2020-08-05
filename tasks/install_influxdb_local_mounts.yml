@@ -118,13 +118,6 @@
     recurse: true
   become: true
 
-- name: Check influxDB output config
-  template:
-    src: telegraf/telegraf_output_influxdb.j2
-    dest: /etc/telegraf/telegraf.d/output_influxdb.conf
-    mode: 'u=rwX,g=rX,o=rX'
-    owner: telegraf
-    group: telegraf
 
 - name: Run InfluxDB container
   docker_container:

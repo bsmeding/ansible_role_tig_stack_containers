@@ -15,6 +15,7 @@ influx_user_telegraf_password: telegraf_pass
 influx_user_grafana: grafana_user
 influx_user_grafana_password: grafana_pass
 
+telegraf_snmp_trap_port: 162               # Default port is 162, but that can
 #telegraf_influxdb_endpoint_ip: ''          # When using other influxdb IP rather than the localhost
 
 grafana_admin_user: admin
