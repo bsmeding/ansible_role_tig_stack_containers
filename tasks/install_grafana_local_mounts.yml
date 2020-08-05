@@ -53,7 +53,7 @@
     group: grafana
     recurse: true
   become: true
-  when: grafana_config_file.stat.exists == false
+  when: not grafana_config_file.stat.exists
 
 - name: Check grafana lib directory
   file:

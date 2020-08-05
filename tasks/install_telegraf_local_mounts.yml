@@ -59,7 +59,7 @@
 
 - name: Create config file
   shell: 'docker run --rm telegraf telegraf config | sudo tee /etc/telegraf/telegraf.conf &lt; /dev/null'
-  when: telegraf_config_file.stat.exists == false
+  when: not telegraf_config_file.stat.exists
 
 - name: Check telegraf config directory
   file:
@@ -88,10 +88,13 @@
       - /proc:/host/proc:ro
       - /etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - /etc/telegraf/telegraf.d:/etc/telegraf/telegraf.d
-      - /etc/telegraf/mibs:/usr/share/mibs/netsnmp      # search paths for SNMP MIBS (/usr/share/mibs and /iana / ietf already in use):  //.snmp/mibs:/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf:/usr/share/mibs/site:/usr/share/snmp/mibs:/usr/share/mibs/iana:/usr/share/mibs/ietf:/usr/share/mibs/netsnmp
+      - /etc/telegraf/mibs:/usr/share/mibs/netsnmp
     env:
       HOST_PROC=/host/proc
     command:
       - --config /etc/telegraf/telegraf.conf
       - --config-directory /etc/telegraf/telegraf.d
   #become: true
+
+
+  # search paths for SNMP MIBS (/usr/share/mibs and /iana / ietf already in use):  //.snmp/mibs:/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf:/usr/share/mibs/site:/usr/share/snmp/mibs:/usr/share/mibs/iana:/usr/share/mibs/ietf:/usr/share/mibs/netsnmp
