@@ -33,7 +33,7 @@
 
 - name: Create config file
   shell: 'docker run --rm influxdb influxd config | sudo tee /etc/influxdb/influxdb.conf > /dev/null'
-  when: influxdb_config_file.stat.exists == false
+  when: not influxdb_config_file.stat.exists
 
 
 ## Set config file:
@@ -53,7 +53,7 @@
     group: influxdb
     recurse: true
   become: true
-  when: influxdb_config_file.stat.exists == false
+  when: not influxdb_config_file.stat.exists
 
 - name: Check influx lib directory
   file:
@@ -64,7 +64,8 @@
     group: influxdb
   become: true
 
-- find:
+- name: Check if influxdb directory file
+  find:
     paths: /var/lib/influxdb
     file_type: directory
     patterns: "*.*"
@@ -88,15 +89,16 @@
     owner: influxdb
     group: influxdb
   register: influxdb_init_script
+  notify: Set database retention
 
-- name: Set database retention
-  shell: 'docker run --rm -e INFLUXDB_HTTP_AUTH_ENABLED=true \
-         -e INFLUXDB_ADMIN_USER={{ influx_admin_user }} \
-         -e INFLUXDB_ADMIN_PASSWORD={{ influx_admin_password }} \
-         -v /var/lib/influxdb:/var/lib/influxdb \
-         -v /etc/influxdb/scripts:/docker-entrypoint-initdb.d \
-         influxdb /init-influxdb.sh > /dev/null'
-  when: influxdb_init_script.changed
+# - name: Set database retention
+#   shell: 'docker run --rm -e INFLUXDB_HTTP_AUTH_ENABLED=true \
+#          -e INFLUXDB_ADMIN_USER={{ influx_admin_user }} \
+#          -e INFLUXDB_ADMIN_PASSWORD={{ influx_admin_password }} \
+#          -v /var/lib/influxdb:/var/lib/influxdb \
+#          -v /etc/influxdb/scripts:/docker-entrypoint-initdb.d \
+#          influxdb /init-influxdb.sh > /dev/null'
+#   when: influxdb_init_script.changed
 
 - name: Set influx data directory permissions
   file:
