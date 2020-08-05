@@ -1,9 +1,5 @@
 ---
 # tasks file for tigstack
-
-# Check if folder exist
-
-# install
 - name: Install containers with docker volume for storage
   block:
   - name: Include tasks for InfluxDB

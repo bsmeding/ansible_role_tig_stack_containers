@@ -8,19 +8,6 @@
   docker_volume:
     name: grafana_log
 
-  # docker_container:
-  #   name: grafana-data
-  #   image: busybox:1.32.0
-  #   state: started
-  #   restart: yes
-  #   restart_policy: on-failure
-  #   restart_retries: 4
-  #   volumes:
-  #     - /var/lib/grafana
-  #     - /var/log/grafana
-  #     - /var/lib/grafana/plugins
-
-
 - name: Install Grafana
   docker_container:
     name: grafana

@@ -35,15 +35,6 @@
   shell: 'docker run --rm influxdb influxd config | sudo tee /etc/influxdb/influxdb.conf > /dev/null'
   when: not influxdb_config_file.stat.exists
 
-
-## Set config file:
-# - name: Modify InfluxDB hostname
-#   replace:
-#     dest=/etc/opt/influxdb/influxdb.conf
-#     regexp='hostname = "localhost"'
-#     replace='hostname = "{{ ansible_hostname }}"'
-#     backup=yes
-
 - name: Set influx config directory permissions
   file:
     path: /etc/influxdb

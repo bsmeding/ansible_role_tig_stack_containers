@@ -31,19 +31,6 @@
     path: /etc/grafana/grafana.ini
   register: grafana_config_file
 
-# - name: Create config file
-#   shell: 'docker run --rm grafana  | sudo tee /etc/grafana/grafana.ini > /dev/null'
-#   when: grafana_config_file.stat.exists == false
-
-
-## Set config file:
-# - name: Modify grafana hostname
-#   replace:
-#     dest=/etc/opt/grafana/grafana.conf
-#     regexp='hostname = "localhost"'
-#     replace='hostname = "{{ ansible_hostname }}"'
-#     backup=yes
-
 - name: Set grafana config directory permissions
   file:
     path: /etc/grafana

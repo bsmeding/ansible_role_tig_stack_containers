@@ -12,7 +12,6 @@
     recurse: true
   become: true
 
-
 - name: Install Telegraf
   docker_container:
     name: telegraf

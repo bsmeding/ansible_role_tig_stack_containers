@@ -29,8 +29,6 @@
          influxdb /init-influxdb.sh > /dev/null'
   when: influxdb_init_script is defined and influxdb_init_script.changed
 
-
-
 - name: Install InfluxDB
   docker_container:
     name: influxdb
