@@ -71,13 +71,12 @@
     user: 992:992
     state: started
     restart: yes
-    restart_policy: on-failure
-    restart_retries: 4
+    restart_policy: "{{ docker_restart_policy }}"
     links:
       - influxdb:influxdb
     privileged: false
     purge_networks: no
-    ports:
+    published_ports:
       - '3000:3000'
     volumes:
       - /var/lib/grafana:/var/lib/grafana

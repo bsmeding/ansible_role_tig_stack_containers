@@ -19,7 +19,7 @@
     image: "{{ docker_containers.telegraf.image }}"
     state: started
     restart: yes
-    restart_policy: on-failure
+    restart_policy: unless-stopped
     restart_retries: 4
     links:
       - influxdb:influxdb

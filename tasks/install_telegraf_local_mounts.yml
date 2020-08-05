@@ -17,7 +17,14 @@
     append: yes
   become: true
 
-
+- name: Check telegraf config directory
+  file:
+    path: /etc/telegraf/telegraf.d/
+    state: directory
+    mode: '0744'
+    owner: telegraf
+    group: telegraf
+  become: true
 
 - name: Check if config file exist
   stat:
@@ -43,15 +50,21 @@
     user: 993:993
     state: started
     restart: yes
-    restart_policy: on-failure
-    restart_retries: 4
+    restart_policy: "{{ docker_restart_policy }}"
     links:
       - influxdb:influxdb
-    privileged: true
+    privileged: false
     purge_networks: no
+    published_ports:
+      - '162:1062/udp'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /proc:/host/proc:ro
       - /etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /etc/telegraf/telegraf.d:/etc/telegraf/telegraf.d
     env:
       HOST_PROC=/host/proc
+    command:
+      - --config /etc/telegraf/telegraf.conf
+      - --config-directory /etc/telegraf/telegraf.d
+  #become: true

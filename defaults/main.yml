@@ -15,11 +15,12 @@ grafana_admin_user: admin
 grafana_admin_password: admin
 grafana_secret_key: grafana
 
-
+docker_restart_policy: unless-stopped         # no, on-failure, always, unless-stopped https://docs.docker.com/config/containers/start-containers-automatically/
 docker_containers:
   grafana:
     image: grafana/grafana:6.6.1
   influxdb:
     image: influxdb:1.8.1
   telegraf:
-    image: telegraf:1.15.1
+    #image: telegraf:1.15.1
+    image: nuntz/telegraf-snmp:latest

@@ -59,6 +59,7 @@ Install TIG stack role: ansible-galaxy install bsmeding.tig_stack_docker
 
 EDIT the: <YOUR USERNAME> with your ownd account logging in to the tig-stack server
 
+If you have problems after multiple play runs and changes in docker, please try to restart the docker service on the target
 
 License
 -------
