@@ -62,6 +62,7 @@
   when: not telegraf_config_file.stat.exists
   become: true
 
+## TODO: Uncomment [[output.influxdb]] as this output will have ouwn config 
 - name: Check telegraf config directory
   file:
     path: /etc/telegraf/telegraf.conf
