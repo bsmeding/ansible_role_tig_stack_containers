@@ -58,8 +58,9 @@
   register: telegraf_config_file
 
 - name: Create config file
-  shell: 'docker run --rm telegraf telegraf config | sudo tee /etc/telegraf/telegraf.conf &lt; /dev/null'
+  shell: 'docker run --rm telegraf telegraf config | tee /etc/telegraf/telegraf.conf &lt; /dev/null'
   when: not telegraf_config_file.stat.exists
+  become: true
 
 - name: Check telegraf config directory
   file:
