@@ -26,6 +26,16 @@
     group: influxdb
   become: true
 
+- name: install pip modules
+- pip:
+    name: influxdb
+    virtualenv: "{{ python_venv }}"
+    virtualenv_site_packages: yes
+  environment:
+    HTTP_PROXY: '192.168.15.9:80'
+    HTTPS_PROXY: '192.168.15.9:80'
+  when: python_venv is defined and python_venv|length>3
+
 - name: Check if config file exist
   stat:
     path: /etc/influxdb/influxdb.conf
@@ -35,7 +45,7 @@
   shell: 'docker run --rm influxdb influxd config | tee /etc/influxdb/influxdb.conf > /dev/null'
   when: not influxdb_config_file.stat.exists
   become: true
-  
+
 - name: Set influx config directory permissions
   file:
     path: /etc/influxdb
