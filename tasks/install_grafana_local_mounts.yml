@@ -17,30 +17,30 @@
     append: yes
   become: true
 
-- name: Check influx config directory
-  file:
-    path: /etc/grafana
-    state: directory
-    mode: '0744'
-    owner: grafana
-    group: grafana
-  become: true
-
-- name: Check if config file exist
-  stat:
-    path: /etc/grafana/grafana.ini
-  register: grafana_config_file
-
-- name: Set grafana config directory permissions
-  file:
-    path: /etc/grafana
-    state: directory
-    mode: 'u=rwX,g=r,o=r'
-    owner: grafana
-    group: grafana
-    recurse: true
-  become: true
-  when: not grafana_config_file.stat.exists
+# - name: Check grafana config directory
+#   file:
+#     path: /etc/grafana
+#     state: directory
+#     mode: '0744'
+#     owner: grafana
+#     group: grafana
+#   become: true
+#
+# - name: Check if config file exist
+#   stat:
+#     path: /etc/grafana/grafana.ini
+#   register: grafana_config_file
+#
+# - name: Set grafana config directory permissions
+#   file:
+#     path: /etc/grafana
+#     state: directory
+#     mode: 'u=rwX,g=r,o=r'
+#     owner: grafana
+#     group: grafana
+#     recurse: true
+#   become: true
+#   when: not grafana_config_file.stat.exists
 
 - name: Check grafana lib directory
   file:
