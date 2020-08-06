@@ -28,7 +28,7 @@
 
 - name: install pip modules
   pip:
-    name: "{{ pip_modules }}"
+    name: "{{ tig_stack_pip_modules }}"
     virtualenv: "{{ python_venv }}"
     virtualenv_site_packages: yes
   when: python_venv is defined and python_venv|length>3

@@ -1,5 +1,12 @@
 ---
 # tasks file for tigstack
+- name: install influx client
+  package:
+    name: influx
+    state: present
+  when: tig_stack_install_influx_on_host|bool
+  become: true
+
 - name: Install containers with docker volume for storage
   block:
   - name: Include tasks for InfluxDB
