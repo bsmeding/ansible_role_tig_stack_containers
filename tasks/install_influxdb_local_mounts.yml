@@ -42,13 +42,11 @@
 
 - name: install influx client
   apt:
-    name: influx-client
+    name: influxdb-client
     state: present
-  environment:
-    HTTP_PROXY: '192.168.15.9:80'
-    HTTPS_PROXY: '192.168.15.9:80'
   when: tig_stack_install_influx_on_host|bool
   become: true
+  ignore_errors: true
 
 - name: Check if config file exist
   stat:
