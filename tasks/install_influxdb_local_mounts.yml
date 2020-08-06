@@ -27,7 +27,7 @@
   become: true
 
 - name: install pip modules
-- pip:
+  pip:
     name: influxdb
     virtualenv: "{{ python_venv }}"
     virtualenv_site_packages: yes
