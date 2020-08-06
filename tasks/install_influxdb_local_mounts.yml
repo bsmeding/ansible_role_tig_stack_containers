@@ -31,9 +31,6 @@
     name: influxdb
     virtualenv: "{{ python_venv }}"
     virtualenv_site_packages: yes
-  environment:
-    HTTP_PROXY: '192.168.15.9:80'
-    HTTPS_PROXY: '192.168.15.9:80'
   when: python_venv is defined and python_venv|length>3
 
 - name: Check if config file exist
