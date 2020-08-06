@@ -9,7 +9,6 @@ tig_stack_install_influx_on_host: false
 python_venv: ''
 tig_stack_pip_modules:
   - influxdb
-  - python3-apt
   - docker
 influx_database_name: 'telegraf'
 influx_reinitialize_database: false     # when true, database script will be run

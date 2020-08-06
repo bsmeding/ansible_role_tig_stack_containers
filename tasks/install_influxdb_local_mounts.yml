@@ -26,7 +26,7 @@
     group: influxdb
   become: true
 
-- name: install pip modules
+- name: install pip modules venv
   pip:
     name: "{{ tig_stack_pip_modules }}"
     virtualenv: "{{ python_venv }}"
@@ -34,8 +34,14 @@
   when: python_venv is defined and python_venv|length>3
   become: true
 
+- name: install pip modules machine
+  pip:
+    name: "{{ tig_stack_pip_modules }}"
+  when: python_venv is undefined or python_venv|length<4
+  become: true
+
 - name: install influx client
-  package:
+  apt:
     name: influx-client
     state: present
   when: tig_stack_install_influx_on_host|bool
