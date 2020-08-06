@@ -32,6 +32,7 @@
     virtualenv: "{{ python_venv }}"
     virtualenv_site_packages: yes
   when: python_venv is defined and python_venv|length>3
+  become: true
 
 - name: install influx client
   package:
@@ -39,7 +40,7 @@
     state: present
   when: tig_stack_install_influx_on_host|bool
   become: true
-  
+
 - name: Check if config file exist
   stat:
     path: /etc/influxdb/influxdb.conf
