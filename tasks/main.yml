@@ -2,7 +2,7 @@
 # tasks file for tigstack
 - name: install influx client
   package:
-    name: influx
+    name: influx-client
     state: present
   when: tig_stack_install_influx_on_host|bool
   become: true
