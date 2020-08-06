@@ -4,11 +4,12 @@
 path_docker_build_dockerfiles: '/tmp/tig_stack_docker_files'
 use_local_mounts_instead_of_docker_volume: true      # docker volumes are for future use, now we still use local mounts
 
-tig_stack_install_influx_on_host: false   
+tig_stack_install_influx_on_host: false
 
 python_venv: ''
 tig_stack_pip_modules:
   - influxdb
+  - python3-apt
   - docker
 influx_database_name: 'telegraf'
 influx_reinitialize_database: false     # when true, database script will be run
