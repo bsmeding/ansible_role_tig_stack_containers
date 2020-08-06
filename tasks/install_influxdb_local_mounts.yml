@@ -32,9 +32,10 @@
   register: influxdb_config_file
 
 - name: Create config file
-  shell: 'docker run --rm influxdb influxd config | sudo tee /etc/influxdb/influxdb.conf > /dev/null'
+  shell: 'docker run --rm influxdb influxd config | tee /etc/influxdb/influxdb.conf > /dev/null'
   when: not influxdb_config_file.stat.exists
-
+  become: true
+  
 - name: Set influx config directory permissions
   file:
     path: /etc/influxdb
