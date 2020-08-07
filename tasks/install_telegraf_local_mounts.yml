@@ -55,7 +55,7 @@
 - name: Copy MIBs to folder /usr/share/mibs/netsnmp
   copy:
     src: mibs/netsnmp
-    dest: /usr/share/mibs/netsnmp
+    dest: /usr/share/mibs
 
 - name: Check if config file exist
   stat:
