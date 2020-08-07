@@ -157,6 +157,7 @@
       - database: "{{ influx_database_name }}"
         privilege: 'WRITE'
   ignore_errors: true
+  register: add_user_telegraf
 
 - name: Create influx user for Grafana
   influxdb_user:
@@ -170,3 +171,17 @@
       - database: "{{ influx_database_name }}"
         privilege: 'READ'
   ignore_errors: true
+  register: add_user_grafana
+
+- name: Create SQL file for adding the users
+  template:
+    src: influxdb/add_users_to_influx.j2
+    dest: /tmp/add_users_to_influx.iql
+    mode: 'u=rwX,g=rX,o=rX'
+    owner: influxdb
+    group: influxdb
+  when: add_user_grafana.failed or add_user_telegraf.failed
+
+- debug:
+    msg: "Could not create users, please use script /tmp/add_users_to_influx.iql to add user account for Grafana and Telegraf  to influxDB"
+  when: add_user_grafana.failed or add_user_telegraf.failed
