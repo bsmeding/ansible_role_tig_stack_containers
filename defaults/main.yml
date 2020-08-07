@@ -20,7 +20,8 @@ influx_user_grafana: grafana_user
 influx_user_grafana_password: grafana_pass
 
 telegraf_snmp_trap_port: 162               # Default port is 162, but that can
-#telegraf_influxdb_endpoint_ip: ''          # When using other influxdb IP rather than the localhost
+telegraf_copy_mibs: true                   # Copy all MIB files shipped by this role to /usr/share/mibs/netsnmp on the target host
+#telegraf_influxdb_endpoint_ip: ''         # When using other influxdb IP rather than the localhost
 
 grafana_admin_user: admin
 grafana_admin_password: admin

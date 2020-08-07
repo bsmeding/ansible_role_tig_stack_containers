@@ -45,12 +45,17 @@
 
 - name: Check telegraf MIBs directory
   file:
-    path: /etc/telegraf/mibs/
+    path: /usr/share/mibs/netsnmp
     state: directory
     mode: '0744'
-    owner: telegraf
-    group: telegraf
+    # owner: telegraf
+    # group: telegraf
   become: true
+
+- name: Copy MIBs to folder /usr/share/mibs/netsnmp
+  copy:
+    src: mibs
+    dest: /usr/share/mibs/netsnmp
 
 - name: Check if config file exist
   stat:
