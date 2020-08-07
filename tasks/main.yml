@@ -1,26 +1,11 @@
 ---
 # tasks file for tigstack
 
-- name: Install containers with docker volume for storage
-  block:
-  - name: Include tasks for InfluxDB
-    include_tasks: install_influxdb.yml
+- name: Include tasks for InfluxDB
+  include_tasks: install_influxdb_local_mounts.yml
 
-  - name: Include tasks for Grafana
-    include_tasks: install_grafana.yml
+- name: Include tasks for Grafana
+  include_tasks: install_grafana_local_mounts.yml
 
-  - name: Include tasks for Telegraf
-    include_tasks: install_telegraf.yml
-  when: not use_local_mounts_instead_of_docker_volume|bool
-
-- name: Install containers with local_mounts on host system
-  block:
-  - name: Include tasks for InfluxDB
-    include_tasks: install_influxdb_local_mounts.yml
-
-  - name: Include tasks for Grafana
-    include_tasks: install_grafana_local_mounts.yml
-
-  - name: Include tasks for Telegraf
-    include_tasks: install_telegraf_local_mounts.yml
-  when: use_local_mounts_instead_of_docker_volume|bool
+- name: Include tasks for Telegraf
+  include_tasks: install_telegraf_local_mounts.yml

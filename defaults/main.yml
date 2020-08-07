@@ -1,10 +1,7 @@
 ---
 # defaults file for tigstack
 
-path_docker_build_dockerfiles: '/tmp/tig_stack_docker_files'
-use_local_mounts_instead_of_docker_volume: true      # docker volumes are for future use, now we still use local mounts
-
-tig_stack_install_influx_on_host: false
+tig_stack_install_influx_on_host: false     # insstal influxdb-client on the host, can be handy for testing
 
 python_venv: ''
 tig_stack_pip_modules:
