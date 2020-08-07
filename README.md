@@ -20,7 +20,7 @@ PLEASE NOTE: there are use settings as login names and password, please use host
 MIBs
 ----
 With Telegraf there are several SNMP mibs shipped (see Docker used default: )
-If you need extra / custom mibs place theme on /etc/telegraf/mibs on the target host running the Telegraf container (only working with local_mounts version)
+If you need extra / custom mibs place theme on /usr/share/mibs/netsnmp on the target host running the Telegraf container (only working with local_mounts version)
 
 
 Dependencies

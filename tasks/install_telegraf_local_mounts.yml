@@ -62,7 +62,7 @@
   when: not telegraf_config_file.stat.exists
   become: true
 
-## TODO: Uncomment [[output.influxdb]] as this output will have ouwn config 
+## TODO: Uncomment [[output.influxdb]] as this output will have ouwn config
 - name: Check telegraf config directory
   file:
     path: /etc/telegraf/telegraf.conf
@@ -90,7 +90,7 @@
       - /proc:/host/proc:ro
       - /etc/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - /etc/telegraf/telegraf.d:/etc/telegraf/telegraf.d
-      - /etc/telegraf/mibs:/usr/share/mibs/netsnmp
+      - /usr/share/mibs/netsnmp:/usr/share/mibs/netsnmp
     env:
       HOST_PROC=/host/proc
     command:
