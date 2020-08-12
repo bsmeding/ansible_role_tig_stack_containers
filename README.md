@@ -54,18 +54,17 @@ Install TIG stack role: ansible-galaxy install bsmeding.tig_stack_docker
 
 ---
 - name: Install TIG stack
-  hosts: [tig_combined]
+  hosts: localhost
   gather_facts: true
   become: yes
   vars:
     show_debug: true
     tig_distributed: false
-  environment:
-    PYTHONPATH: "/home/<YOUR USERNAME>/.local/lib/python3.7/site-packages/"
+    influx_reinitialize_database: true
   tasks:
     - name: Include role for TIG stack
       include_role:
-        name: tig_stack_docker
+        name: bsmeding.tig_stack_docker
 
 EDIT the: <YOUR USERNAME> with your ownd account logging in to the tig-stack server
 
