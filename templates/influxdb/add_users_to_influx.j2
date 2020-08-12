@@ -1,6 +1,6 @@
-CREATE USER "{{ influx_user_telegraf }}" WITH PASSWORD '{{ influx_user_telegraf_password }}'
-GRANT WRITE ON "{{ influx_database_name }}" TO "{{ influx_user_telegraf }}"
+CREATE USER "{{ influx_user_telegraf }}" WITH PASSWORD '{{ influx_user_telegraf_password }}';
+GRANT WRITE ON "{{ influx_database_name }}" TO "{{ influx_user_telegraf }}";
 
 
-CREATE USER "{{ influx_user_grafana }}" WITH PASSWORD '{{ influx_user_grafana_password }}'
-GRANT READ ON "{{ influx_database_name }}" TO "{{ influx_user_grafana }}"
+CREATE USER "{{ influx_user_grafana }}" WITH PASSWORD '{{ influx_user_grafana_password }}';
+GRANT READ ON "{{ influx_database_name }}" TO "{{ influx_user_grafana }}";
